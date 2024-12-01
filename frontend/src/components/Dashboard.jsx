@@ -13,6 +13,12 @@ const Dashboard = () => {
   // const userDetails = JSON.parse(localStorage.getItem('userDetails')) || {};
 
   const { userDetails } = useAuth();
+    const parsedDetails = userDetails ? JSON.parse(userDetails) : null;
+    const login = parsedDetails?.login;
+    const name = parsedDetails?.name;
+    
+
+
 
   return (
     <div className="flex min-h-screen ">

@@ -14,7 +14,7 @@ const Hero = () => {
     const REDIRECT_URI = "http://localhost:5173";
     const navigate = useNavigate(); 
 
-    const { updateUserDetails } = useAuth();
+    const { setUserDetails } = useAuth();
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -39,9 +39,12 @@ const Hero = () => {
         // Fetch user details from the backend using the access token
         axios.get(`http://localhost:5000/api/getUser?token=${token}`)
             .then(response => {
-              updateUserDetails(response.data);
-              console.log('User Details:', response.data);  // Handle the user details
-              updateUserDetails(response.data);
+              setUserDetails(response.data);
+              console.log('User Details:', response.data);
+              console.log('Nameeeeeee:', response.data.name); 
+              const userDetails = response.data; // Handle the user details
+              setUserDetails(userDetails);
+              console.log(setUserDetails)
             
             })
             .catch(err => console.error('Error fetching user details:', err));

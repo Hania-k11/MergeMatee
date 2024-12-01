@@ -1,19 +1,16 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 
-// Create the User Context
-export const AuthContext = createContext(); // Export AuthContext
+export const AuthContext = createContext(null);
 
-// Provider Component
-export const UserProvider = ({ children }) => {
-  const [userDetails, setUserDetails] = useState(() => {
-    const storedDetails = localStorage.getItem('userDetails');
-    return storedDetails ? JSON.parse(storedDetails) : null;
+export const UserProvider = (props) => {
+
+
+    const [userDetails, setUserDetails] = useState(() => {
+        return localStorage.getItem('userDetails') || '';
   });
+  
+ 
 
-  const updateUserDetails = (details) => {
-    setUserDetails(details);
-    localStorage.setItem('userDetails', JSON.stringify(details));
-  };
 
   const clearUserDetails = () => {
     setUserDetails(null);
@@ -21,11 +18,10 @@ export const UserProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ userDetails, updateUserDetails, clearUserDetails }}>
-      {children}
+    <AuthContext.Provider value={{ userDetails, setUserDetails}}>
+      {props.children}
     </AuthContext.Provider>
   );
 };
 
-// Custom hook to use the AuthContext
 export const useAuth = () => useContext(AuthContext);
