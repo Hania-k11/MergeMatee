@@ -8,20 +8,23 @@ import KeyFeatures from './components/KeyFeatures'
 import Testimonials from './components/Testimonials'
 import CallToAction from './components/CallToAction'
 import Footer from './components/Footer'
+import LandingPage from './components/LandingPage'
+import Register from './components/Register'
+import Dashboard from './components/Dashboard'
+
+
 
 const App = () => {
+
+  
   return (
-    
-    <main className="flex min-h-screen flex-col items-center justify-between">
-    <NavBar />
-    <Hero />
-    <WhyMergeMate />
-    <HowItWorks />
-    <KeyFeatures />
-    <Testimonials />
-    <CallToAction />
-    <Footer />
-  </main>
+    <>
+
+    <Dashboard/>
+    {/* <Register/> */}
+   {/* <LandingPage/> */}
+
+   </>
   )
 }
 
