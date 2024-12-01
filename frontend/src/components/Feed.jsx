@@ -25,8 +25,9 @@ const Feed = ({ userPreferences }) => {
     return (
       <div>
         <SearchFilters onFilter={handleFilter} />
-        <div className="flex flex-col items-center space-y-6">
-          {filteredProjects.length > 0 ? (
+       
+          <SwipeCard/>
+          {/* {filteredProjects.length > 0 ? (
             filteredProjects.map((project) => (
               <SwipeCard
                 key={project.id}
@@ -37,9 +38,9 @@ const Feed = ({ userPreferences }) => {
             ))
           ) : (
             <p>No projects match your filters.</p>
-          )}
+          )} */}
         </div>
-      </div>
+     
     );
   };
   

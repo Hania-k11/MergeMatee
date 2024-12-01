@@ -1,6 +1,17 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
+
+
+  const navigate = useNavigate();
+
+  const handleRegistration = () => {
+    // Assume registration logic here
+    console.log('User registered successfully');
+    navigate('/dashboard'); // Redirect to Dashboard
+  };
+
   return (
     <section className="w-full min-h-screen flex flex-col items-center justify-center bg-gradient-to-t from-zinc-400 via-gray-200 to-white text-center px-6 py-16">
       <div className="bg-white shadow-lg rounded-lg w-full max-w-2xl p-8 -mt-7">
@@ -8,7 +19,7 @@ const Register = () => {
         <p className="text-sm text-gray-600 mb-6">
           Register as a Contributor or Project Owner and start collaborating on amazing projects.
         </p>
-        <form className="space-y-6">
+        <form className="space-y-6"   onSubmit={handleRegistration}>
           {/* Role Field */}
           <div>
             <label className="block text-left text-sm font-medium text-gray-700 mb-1">Role</label>
@@ -47,7 +58,7 @@ const Register = () => {
 
            {/* Expertise Field */}
            <div>
-            <label className="block text-left text-sm font-medium text-gray-700 mb-1">Tech Stack</label>
+            <label className="block text-left text-sm font-medium text-gray-700 mb-1">Expertise</label>
             <input
               type="text"
               name="Expertise"

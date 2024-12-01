@@ -4,12 +4,17 @@ import { Github } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import  { useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 
 const Hero = () => {
 
     const CLIENT_ID = "Ov23liStmKwivcKl3p9U";  // Replace with your GitHub client ID
-    const REDIRECT_URI = "http://localhost:5173";  // This should match your frontend's URL
+    const REDIRECT_URI = "http://localhost:5173";
+    const navigate = useNavigate(); 
+
+    const { updateUserDetails } = useAuth();
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -22,7 +27,10 @@ const Hero = () => {
                     const { access_token } = response.data;
                     localStorage.setItem('token', access_token);  // Save token to localStorage
                     fetchUserDetails(access_token);  // Fetch user details using the token
-                })
+                    navigate('/register');
+                    console.log('registerrr')
+                
+                  })
                 .catch(err => console.error('Error getting access token:', err));
         }
     }, []);  // Only run once when the component mounts
@@ -31,7 +39,10 @@ const Hero = () => {
         // Fetch user details from the backend using the access token
         axios.get(`http://localhost:5000/api/getUser?token=${token}`)
             .then(response => {
-                console.log('User Details:', response.data);  // Handle the user details
+              updateUserDetails(response.data);
+              console.log('User Details:', response.data);  // Handle the user details
+              updateUserDetails(response.data);
+            
             })
             .catch(err => console.error('Error fetching user details:', err));
     };

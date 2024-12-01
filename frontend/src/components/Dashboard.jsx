@@ -4,16 +4,21 @@ import TaskBoard from "./TaskBoard";
 import Notifications from "./Notifications";
 import Feed from "./Feed"; // Import the TaskBoard component
 import SwipeCard from "./SwipeCard";
+import { useAuth } from "../context/AuthContext";
+
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Track sidebar state
   const [activeComponent, setActiveComponent] = useState("AddProject"); // Track which component to display
+  // const userDetails = JSON.parse(localStorage.getItem('userDetails')) || {};
+
+  const { userDetails } = useAuth();
 
   return (
-    <div className="flex h-screen">
+    <div className="flex min-h-screen ">
       {/* Sidebar */}
       <aside
-        className={`bg-zinc-800 text-white w-64 p-4 transition-all duration-300 ${
+        className={`bg-zinc-800 text-white w-64 p-4 transition-all duration-300  ${
           isSidebarOpen ? "block" : "hidden"
         }`}
       >
@@ -27,6 +32,7 @@ const Dashboard = () => {
               Task Board
             </button>
           </li>
+          
           <li className="py-2 px-4">
             <button
               className="w-full text-left py-2 px-4 hover:bg-gray-700 cursor-pointer"
@@ -34,6 +40,16 @@ const Dashboard = () => {
             >
               Add Project
             </button>
+            
+          </li>
+          <li className="py-2 px-4">
+            <button
+              className="w-full text-left py-2 px-4 hover:bg-gray-700 cursor-pointer"
+              onClick={() => setActiveComponent("ExploreProject")} // Show AddProject
+            >
+              Explore Project
+            </button>
+            
           </li>
           <li className="py-2 px-4">
             <button
@@ -75,7 +91,7 @@ const Dashboard = () => {
           </button>
 
           <div className="flex items-center">
-            <h1 className="text-xl font-bold"> Dashboard </h1>
+            <h1 className="text-xl font-bold">Welcome, {name} !</h1>
           </div>
 
           <button className="bg-zinc-800 text-white px-4 py-2 rounded hover:bg-gray-600">
@@ -84,11 +100,13 @@ const Dashboard = () => {
         </header>
 
         {/* Main Section */}
-        <div className="p-4">
+        <div className=" ">
           {/* Conditionally Render Components */}
           {activeComponent === "AddProject" && <AddProject />}
-          {activeComponent === "TaskBoard" && <SwipeCard />}
-          {activeComponent === "Notifications" && <Feed />}
+          {activeComponent === "TaskBoard" && <TaskBoard />}
+          {activeComponent === "Notifications" && <Notifications />}
+          {activeComponent === "ExploreProject" && <Feed />}
+          
           
           {/* Add more components here as needed */}
         </div>
