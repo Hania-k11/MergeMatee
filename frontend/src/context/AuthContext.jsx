@@ -6,8 +6,10 @@ export const UserProvider = (props) => {
 
 
     const [userDetails, setUserDetails] = useState(() => {
-        return localStorage.getItem('userDetails') || '';
-  });
+        return localStorage.getItem('userDetails') 
+          ? JSON.parse(localStorage.getItem('userDetails')) 
+          : null; // Check localStorage for initial value
+      });
   
  
 
@@ -18,7 +20,7 @@ export const UserProvider = (props) => {
   };
 
   return (
-    <AuthContext.Provider value={{ userDetails, setUserDetails}}>
+    <AuthContext.Provider value={{ userDetails, setUserDetails, clearUserDetails}}>
       {props.children}
     </AuthContext.Provider>
   );

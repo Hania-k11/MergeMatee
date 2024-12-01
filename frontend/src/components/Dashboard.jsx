@@ -5,20 +5,24 @@ import Notifications from "./Notifications";
 import Feed from "./Feed"; // Import the TaskBoard component
 import SwipeCard from "./SwipeCard";
 import { useAuth } from "../context/AuthContext";
-
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Track sidebar state
   const [activeComponent, setActiveComponent] = useState("AddProject"); // Track which component to display
   // const userDetails = JSON.parse(localStorage.getItem('userDetails')) || {};
 
-  const { userDetails } = useAuth();
-    const parsedDetails = userDetails ? JSON.parse(userDetails) : null;
-    const login = parsedDetails?.login;
-    const name = parsedDetails?.name;
+  const { userDetails,  clearUserDetails  } = useAuth();
+    // const parsedDetails = userDetails ? JSON.parse(userDetails) : null;
+    const login = userDetails.login;
+    const name = userDetails.name;
     
+    const navigate = useNavigate();
 
-
+    const handleLogout = () => {
+      clearUserDetails(); // Clear user details from context and localStorage
+      navigate('/'); // Navigate to the root URL
+  };
 
   return (
     <div className="flex min-h-screen ">
@@ -100,7 +104,7 @@ const Dashboard = () => {
             <h1 className="text-xl font-bold">Welcome, {name} !</h1>
           </div>
 
-          <button className="bg-zinc-800 text-white px-4 py-2 rounded hover:bg-gray-600">
+          <button onClick={handleLogout} className="bg-zinc-800 text-white px-4 py-2 rounded hover:bg-gray-600">
             Logout
           </button>
         </header>

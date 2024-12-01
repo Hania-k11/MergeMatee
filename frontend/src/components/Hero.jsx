@@ -39,12 +39,11 @@ const Hero = () => {
         // Fetch user details from the backend using the access token
         axios.get(`http://localhost:5000/api/getUser?token=${token}`)
             .then(response => {
-              setUserDetails(response.data);
-              console.log('User Details:', response.data);
-              console.log('Nameeeeeee:', response.data.name); 
-              const userDetails = response.data; // Handle the user details
-              setUserDetails(userDetails);
-              console.log(setUserDetails)
+              const userDetails = response.data;
+            console.log('User Details:', userDetails);  // Debug log to see the fetched data
+            setUserDetails(userDetails);  // Set context state
+            localStorage.setItem('userDetails', JSON.stringify(userDetails));
+            console.log('User Detailsyyyy:', response.data); 
             
             })
             .catch(err => console.error('Error fetching user details:', err));
