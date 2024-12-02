@@ -61,6 +61,48 @@ app.get('/api/getUser', async (req, res) => {
     }
 });
 
+const { v4: uuidv4 } = require('uuid'); // Import UUID library
+const Project = require('./Models/Project'); // Import the Project model
+
+// API to add a new project
+app.post('/api/projects', async (req, res) => {
+  try {
+    const { OwnerID, description, difficulty, tech_stack, contribution_guidelines, repo_name } = req.body;
+
+    // Validate required fields
+    if (!OwnerID || !description || !difficulty || !Array.isArray(tech_stack) || !contribution_guidelines) {
+      return res.status(400).json({
+        message: 'Validation error: All fields are required.',
+      });
+    }
+
+    // Create a new project instance with a generated ProjectID
+    const newProject = new Project({
+      ProjectID: uuidv4(), // Automatically generate a unique ProjectID
+      OwnerID,
+      description,
+      difficulty,
+      tech_stack,
+      contribution_guidelines,
+      repo_name,
+    });
+
+    // Save the project to the database
+    const savedProject = await newProject.save();
+
+    // Respond with the saved project
+    res.status(201).json({
+      message: 'Project created successfully',
+      project: savedProject,
+    });
+  } catch (error) {
+    console.error('Error creating project:', error.message);
+    res.status(500).json({
+      message: 'Server error: Failed to create project',
+      error: error.message,
+    });
+  }
+});
 
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/MergeMate')
@@ -68,6 +110,86 @@ mongoose.connect('mongodb://localhost:27017/MergeMate')
   .catch((err) => console.error('Could not connect to MongoDB', err));
 
 // Route for the root path
+
+app.get('/api/projects', async (req, res) => {
+    try {
+      const { ProjectID } = req.query; // Retrieve ProjectID from query parameters
+  
+      if (ProjectID) {
+        // Fetch project by ProjectID
+        const project = await Project.findOne({ ProjectID });
+        if (!project) {
+          return res.status(404).json({
+            message: 'Project not found',
+          });
+        }
+        return res.status(200).json({
+          message: 'Project retrieved successfully',
+          project,
+        });
+      }
+  
+      // Fetch all projects
+      const projects = await Project.find();
+      res.status(200).json({
+        message: 'Projects retrieved successfully',
+        projects,
+      });
+    } catch (error) {
+      console.error('Error retrieving projects:', error.message);
+      res.status(500).json({
+        message: 'Server error: Failed to retrieve projects',
+        error: error.message,
+      });
+    }
+  });
+
+//   const ContributionRequest = require('./Models/Contribution_Request'); // Import the model
+
+ 
+//   // POST endpoint to create a contribution request
+//   app.post('/api/contribution-request', async (req, res) => {
+//     try {
+//       const { ProjectID, ContributorID, RequestType } = req.body;
+  
+//       // Validate required fields
+//       if (!ProjectID || !ContributorID || !RequestType) {
+//         return res.status(400).json({ error: 'ProjectID, ContributorID, and RequestType are required.' });
+//       }
+  
+//       // Verify the RequestType
+//       if (RequestType !== 'swipe_right') {
+//         return res.status(400).json({ error: 'Invalid RequestType. Only "swipe_right" is allowed.' });
+//       }
+  
+//       // Create a new contribution request document
+//       const newContributionRequest = new ContributionRequest({
+//         CR_ID: uuidv4(), // Generate a unique ID
+//         ProjectID: mongoose.Types.ObjectId(ProjectID), // Convert to ObjectId
+//         ContributorID: mongoose.Types.ObjectId(ContributorID), // Convert to ObjectId
+//         status: 'Pending', // Initial status is "Pending"
+//         RequestType,
+//       });
+  
+//       // Save the contribution request to the database
+//       const savedRequest = await newContributionRequest.save();
+  
+//       // Respond with the saved request
+//       res.status(201).json({
+//         message: 'Contribution request created successfully',
+//         request: savedRequest,
+//       });
+//     } catch (error) {
+//       console.error('Error creating contribution request:', error.message);
+//       res.status(500).json({ 
+//         error: 'Failed to create contribution request', 
+//         details: error.message,
+//       });
+//     }
+//   });
+
+
+
 
 
 // POST endpoint to insert user data

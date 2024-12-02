@@ -11,7 +11,7 @@ import { useEffect } from "react";
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Track sidebar state
-  const [activeComponent, setActiveComponent] = useState("AddProject"); // Track which component to display
+  const [activeComponent, setActiveComponent] = useState("Profile"); // Track which component to display
   // const userDetails = JSON.parse(localStorage.getItem('userDetails')) || {};
 
   const [userRole, setUserRole] = useState(null);

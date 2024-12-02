@@ -8,6 +8,7 @@ const Register = () => {
   const { userDetails } = useAuth();
 
   // Handle cases where userDetails might be null or undefined
+  
   const name = userDetails?.name || '';
   const profile_picture = userDetails?.avatar_url || '';
   const github_id = userDetails?.id || '';
@@ -128,7 +129,7 @@ const Register = () => {
             type="submit"
             className="w-full bg-blue-600 text-white font-semibold rounded-lg shadow-md py-3 hover:bg-blue-700 transition-all"
           >
-            Register
+            Login
           </button>
         </form>
       </div>

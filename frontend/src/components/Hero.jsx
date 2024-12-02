@@ -14,7 +14,13 @@ const Hero = () => {
     const REDIRECT_URI = "http://localhost:5173";
     const navigate = useNavigate(); 
 
-    const { setUserDetails } = useAuth();
+    const { setUserDetails , userDetails} = useAuth();
+    
+  // Handle cases where userDetails might be null or undefined
+  
+  const name = userDetails?.name || '';
+  const profile_picture = userDetails?.avatar_url || '';
+  const github_id = userDetails?.id || '';
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);

@@ -1,28 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TinderCard from 'react-tinder-card';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 
 const SwipeCard = () => {
-  const [projects, setProjects] = useState([
-    { id: 1, name: 'E-commerce Platform', description: 'An online marketplace for buying and selling products.' },
-    { id: 2, name: 'Task Management App', description: 'A productivity tool for organizing and tracking tasks.' },
-    { id: 3, name: 'Social Media Dashboard', description: 'A centralized hub for managing multiple social media accounts.' },
-    { id: 4, name: 'Fitness Tracker', description: 'An app to monitor workouts, nutrition, and health goals.' },
-    { id: 5, name: 'Recipe Finder', description: 'A tool to discover and save recipes based on available ingredients.' },
-  ]);
-
-  const [currentIndex, setCurrentIndex] = useState(projects.length - 1);
+  const [projects, setProjects] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(-1); // Updated dynamically after fetching
   const [action, setAction] = useState('');
   const childRefs = React.useMemo(
     () => Array(projects.length).fill(0).map(() => React.createRef()),
     [projects.length]
   );
 
+  // Fetch projects data on component mount
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/projects'); // Replace with your API URL if different
+        if (!response.ok) throw new Error('Failed to fetch projects');
+        const data = await response.json();
+        setProjects(data.projects); // Assuming your API returns { projects: [...] }
+        setCurrentIndex(data.projects.length - 1); // Set initial index
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
   const handleSwipe = (dir, index) => {
     if (index === currentIndex) {
       setAction(dir === 'right' ? 'Liked' : 'Disliked');
       setTimeout(() => setAction(''), 1000); // Clear message after 1 second
-      setProjects((prevProjects) => prevProjects.slice(0, -1));
       setCurrentIndex((prevIndex) => prevIndex - 1);
     }
   };
@@ -41,15 +50,20 @@ const SwipeCard = () => {
         {projects.map((project, index) => (
           <TinderCard
             ref={childRefs[index]}
-            key={project.id}
+            key={project.ProjectID} // Use ProjectID as a unique key
             onSwipe={(dir) => handleSwipe(dir, index)}
             preventSwipe={['up', 'down']}
             className="absolute w-full h-full"
           >
             <div className="relative w-full h-full bg-white rounded-2xl shadow-xl overflow-hidden">
               <div className="p-6 flex flex-col justify-between h-full">
-                <h3 className="text-2xl font-bold text-gray-800 mb-2">{project.name}</h3>
-                <p className="text-gray-600 flex-grow">{project.description}</p>
+                <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                  Project Name:{project.repo_name || 'Project Name'}
+                </h3>
+                <p className="text-gray-600 flex-grow">Description: {project.description || 'No description available'}</p>
+                <p className="text-sm text-gray-500 mt-2">
+                  Difficulty: {project.difficulty || 'Not specified'}
+                </p>
                 <div className="flex justify-between items-center mt-4">
                   <span className="text-sm text-gray-500">
                     Project {projects.length - currentIndex} of {projects.length}
