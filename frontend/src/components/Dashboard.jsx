@@ -6,18 +6,48 @@ import Feed from "./Feed"; // Import the TaskBoard component
 import SwipeCard from "./SwipeCard";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from 'react-router-dom';
+import Profile from "./Profile";
+import { useEffect } from "react";
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Track sidebar state
   const [activeComponent, setActiveComponent] = useState("AddProject"); // Track which component to display
   // const userDetails = JSON.parse(localStorage.getItem('userDetails')) || {};
 
+  const [userRole, setUserRole] = useState(null);
+
+  // Handle cases where userDetails might be null or undefined
+ 
+  
+  
   const { userDetails,  clearUserDetails  } = useAuth();
     // const parsedDetails = userDetails ? JSON.parse(userDetails) : null;
     const login = userDetails.login;
     const name = userDetails.name;
-    
+    const github_id = userDetails?.id || '';
+
     const navigate = useNavigate();
+
+    useEffect(() => {
+      const fetchUserRole = async () => {
+        try {
+          const response = await fetch(`http://localhost:5000/api/users/${github_id}`);
+          const data = await response.json();
+  
+          if (response.status === 200) {
+            setUserRole(data.user.role); // Set the user role
+          } else {
+            console.error(data.message);
+          }
+        } catch (error) {
+          console.error("Error fetching user role:", error);
+        }
+      };
+  
+      if (github_id) {
+        fetchUserRole();
+      }
+    }, [github_id]);
 
     const handleLogout = () => {
       clearUserDetails(); // Clear user details from context and localStorage
@@ -43,24 +73,28 @@ const Dashboard = () => {
             </button>
           </li>
           
-          <li className="py-2 px-4">
-            <button
-              className="w-full text-left py-2 px-4 hover:bg-gray-700 cursor-pointer"
-              onClick={() => setActiveComponent("AddProject")} // Show AddProject
-            >
-              Add Project
-            </button>
-            
-          </li>
-          <li className="py-2 px-4">
-            <button
-              className="w-full text-left py-2 px-4 hover:bg-gray-700 cursor-pointer"
-              onClick={() => setActiveComponent("ExploreProject")} // Show AddProject
-            >
-              Explore Project
-            </button>
-            
-          </li>
+          {userRole !== "Contributor" && (
+            <li className="py-2 px-4">
+              <button
+                className="w-full text-left py-2 px-4 hover:bg-gray-700 cursor-pointer"
+                onClick={() => setActiveComponent("AddProject")} // Show AddProject/hide
+              >
+                Add Project
+              </button>
+            </li>
+          )}
+
+          {userRole !== "Project Owner" && (
+            <li className="py-2 px-4">
+              <button
+                className="w-full text-left py-2 px-4 hover:bg-gray-700 cursor-pointer"
+                onClick={() => setActiveComponent("ExploreProject")} // Show ExploreProject
+              >
+                Explore Project
+              </button>
+            </li>
+          )}
+
           <li className="py-2 px-4">
             <button
               className="w-full text-left py-2 px-4 hover:bg-gray-700 cursor-pointer"
@@ -79,6 +113,7 @@ const Dashboard = () => {
           <li className="py-2 px-4">
             <button
               className="w-full text-left py-2 px-4 hover:bg-gray-700 cursor-pointer"
+              onClick={() => setActiveComponent("Profile")}
             >
               My Profile
             </button>
@@ -116,6 +151,8 @@ const Dashboard = () => {
           {activeComponent === "TaskBoard" && <TaskBoard />}
           {activeComponent === "Notifications" && <Notifications />}
           {activeComponent === "ExploreProject" && <Feed />}
+          {activeComponent === "Profile" && <Profile />}
+          
           
           
           {/* Add more components here as needed */}

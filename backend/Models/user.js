@@ -1,18 +1,36 @@
-// Import mongoose
 const mongoose = require('mongoose');
 
-// Define the user schema
 const userSchema = new mongoose.Schema({
-  id: { type: String, required: true, unique: true },
-  github_id: { type: String, required: true, unique: true },
-  name: { type: String, required: true },
-  profile_picture: { type: String }, // URL of the profile picture
-  experience_level: { type: String }, // Example: Beginner, Intermediate, Expert
-  tech_stack: { type: [String] }, // Array of technologies
-  expertise: { type: String }, // Example: Frontend, Backend
-  role: { type: String } // Example: Developer, Manager
+  
+  github_id: {
+    type: String,
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  profile_picture: {
+    type: String,
+  },
+  experience_level: {
+    type: String,
+  },
+  tech_stack: {
+    type: [String],
+  },
+  expertise: {
+    type: String,
+  },
+  role: {
+    type: String,
+  },
+  registered: {
+    type: Boolean,
+    default: false, // Default value for the registered field
+  },
 });
 
-// Create and export the user model
 const User = mongoose.model('User', userSchema);
+
 module.exports = User;
