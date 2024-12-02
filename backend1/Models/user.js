@@ -1,35 +1,34 @@
-// Import mongoose
 const mongoose = require('mongoose');
 
-// Define the user schema
 const userSchema = new mongoose.Schema({
-  id: {
-    type: String,
-    required: [true, 'ID is required']
-  },
+  
   github_id: {
     type: String,
-    required: [true, 'GitHub ID is required']
+    required: true,
   },
   name: {
     type: String,
-    required: [true, 'Name is required']
+    required: true,
   },
   profile_picture: {
-    type: String
+    type: String,
   },
   experience_level: {
-    type: String
+    type: String,
   },
   tech_stack: {
-    type: [String]
+    type: [String],
   },
   expertise: {
-    type: String
+    type: String,
   },
   role: {
-    type: String
-  }
+    type: String,
+  },
+  registered: {
+    type: Boolean,
+    default: false, // Default value for the registered field
+  },
 });
 
 const User = mongoose.model('User', userSchema);
